@@ -95,7 +95,7 @@ def read_vehicle_data(filepath):
 class Vehicle:
     """车辆类，用于模拟长方形车辆的运动"""
     
-    def __init__(self, x, y, angle=0, length=4, width=2, color='blue', label=''):
+    def __init__(self, x, y, angle=0, length=8.5, width=3.5, color='blue', label=''):
         """
         初始化车辆
         
@@ -184,7 +184,7 @@ def create_animation(vehicles_data):
         
         # 创建车辆对象
         vehicle = Vehicle(vehicle_data['x'][0], vehicle_data['y'][0], 
-                         color=color, length=4, width=2, label=name)
+                         color=color, length=8.5, width=3.5, label=name)
         vehicles.append(vehicle)
         
         # 添加车辆矩形并保存引用
