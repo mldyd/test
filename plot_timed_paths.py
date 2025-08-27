@@ -120,8 +120,10 @@ def plot_timed_paths(paths,save_path, colors=None):
 def main():
     """主函数"""
     # 从终端获取输入
-    folder_name = input("请输入文件夹名称: ")
-    file_path = rf'C:\Users\JQ\download\work\path\new3\{folder_name}\timed_path_result.txt'
+    # folder_name = input("请输入文件夹名称: ")
+    folder_name = 'point copy 5'
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = rf'{script_dir}\{folder_name}\timed_path_result.txt'
     # 获取保存图片的路径，将 .txt 替换为 .png
     save_path = os.path.splitext(file_path)[0] + '.png'
     # 读取数据

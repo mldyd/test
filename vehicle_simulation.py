@@ -26,7 +26,19 @@ def setup_chinese_font():
         print("警告：中文字体设置可能存在问题，将使用默认字体")
 
 # 在程序开始时调用字体设置
+# 设置中文字体
 setup_chinese_font()
+
+# 添加生成颜色的函数
+def generate_colors(n):
+    """为n个车辆生成不同的颜色"""
+    colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFD166', '#06D6A0', '#118AB2', '#073B4C', '#8338EC', '#FF006E', '#FB5607']
+    # 如果需要更多颜色，循环使用这些颜色或使用matplotlib的颜色循环
+    if n <= len(colors):
+        return colors[:n]
+    else:
+        # 重复使用颜色列表
+        return (colors * (n // len(colors) + 1))[:n]
 
 def read_vehicle_data(filepath):
     """
@@ -155,9 +167,10 @@ def create_animation(vehicles_data):
     ax.set_ylabel('Y坐标', fontsize=12)
     ax.grid(True, alpha=0.3)
     
-    # 设置颜色
-    colors = ['#FF6B6B', '#4ECDC4', '#45B7D1']
-    vehicle_names = ['车辆A', '车辆B', '车辆C']
+    # 修改：根据车辆数量动态生成颜色和名称
+    num_vehicles = len(vehicles_data)
+    colors = generate_colors(num_vehicles)
+    vehicle_names = [f'车辆{i+1}' for i in range(num_vehicles)]
     
     trajectories = []
     vehicles = []
@@ -249,6 +262,7 @@ def create_animation(vehicles_data):
     
     return fig, anim
 
+# 修改create_static_plot函数以支持任意数量的车辆数据
 def create_static_plot(vehicles_data):
     """创建静态轨迹图"""
     
@@ -268,9 +282,10 @@ def create_static_plot(vehicles_data):
     ax.set_ylabel('Y坐标 (米)', fontsize=12)
     ax.grid(True, alpha=0.3, linestyle='--')
     
-    # 设置颜色
-    colors = ['#FF6B6B', '#4ECDC4', '#45B7D1']
-    vehicle_names = ['车辆A', '车辆B', '车辆C']
+    # 修改：根据车辆数量动态生成颜色和名称
+    num_vehicles = len(vehicles_data)
+    colors = generate_colors(num_vehicles)
+    vehicle_names = [f'车辆{i+1}' for i in range(num_vehicles)]
     
     for i, (vehicle_data, color, name) in enumerate(zip(vehicles_data, colors, vehicle_names)):
         x = vehicle_data['x']
@@ -308,11 +323,15 @@ def create_static_plot(vehicles_data):
     plt.tight_layout()
     return fig
 
+# 修改main函数以支持任意数量的车辆数据
 def main():
     """主函数"""
     # 文件路径
-    filepath = fr'C:\Users\JQ\download\work\path\new3\point copy 4\output.txt'
-    output_dir = r'C:\Users\JQ\download\work\path\new3\point copy 4'
+    folder_name = input("请输入文件夹名称: ")
+    # folder_name = 'point copy 5'
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    filepath = rf'{script_dir}\{folder_name}\output.txt'
+    output_dir = rf'{script_dir}\{folder_name}'
     # 检查文件是否存在
     if not os.path.exists(filepath):
         print(f"文件不存在: {filepath}")
@@ -321,7 +340,11 @@ def main():
     # 读取数据
     vehicles_data = read_vehicle_data(filepath)
     
-    if len(vehicles_data) != 3:
+    # 修改：添加对空数据的检查，保留对3组数据的警告但允许处理任意数量的数据
+    if len(vehicles_data) < 1:
+        print("错误: 未读取到任何车辆数据")
+        return
+    elif len(vehicles_data) != 3:
         print(f"警告: 期望3组数据，实际读取到{len(vehicles_data)}组")
     
     # 打印数据信息
