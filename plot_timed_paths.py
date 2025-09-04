@@ -120,26 +120,46 @@ def plot_timed_paths(paths,save_path, colors=None):
 def main():
     """主函数"""
     # 从终端获取输入
-    folder_name = input("请输入文件夹名称: ")
-    # folder_name = 'point copy 5'
+    # folder_name = input("请输入文件夹名称: ")
+    # # folder_name = 'point copy 5'
+    # script_dir = os.path.dirname(os.path.abspath(__file__))
+    # file_path = rf'{script_dir}\{folder_name}\timed_path_result.txt'
+    # # 获取保存图片的路径，将 .txt 替换为 .png
+    # save_path = os.path.splitext(file_path)[0] + '.png'
+    # # 读取数据
+    # paths = read_timed_paths_from_file(file_path)
+    
+    # if not paths:
+    #     print("没有找到有效的路径数据")
+    #     return
+    
+    # print(f"成功读取 {len(paths)} 条路径")
+    # for i, path in enumerate(paths):
+    #     drive_modes = list(set([p[4] for p in path]))
+    #     print(f"  路径{i+1}: {len(path)}个点，模式: {drive_modes}")
+    
+    # # 绘制图形
+    # plot_timed_paths(paths,save_path)        
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = rf'{script_dir}\{folder_name}\timed_path_result.txt'
-    # 获取保存图片的路径，将 .txt 替换为 .png
-    save_path = os.path.splitext(file_path)[0] + '.png'
-    # 读取数据
-    paths = read_timed_paths_from_file(file_path)
-    
-    if not paths:
-        print("没有找到有效的路径数据")
-        return
-    
-    print(f"成功读取 {len(paths)} 条路径")
-    for i, path in enumerate(paths):
-        drive_modes = list(set([p[4] for p in path]))
-        print(f"  路径{i+1}: {len(path)}个点，模式: {drive_modes}")
-    
-    # 绘制图形
-    plot_timed_paths(paths,save_path)        
+    for i in range(10):
+        folder_name = f"point copy {i}"
+        file_path = rf'{script_dir}\{folder_name}\timed_path_result.txt'
+        # 获取保存图片的路径，将 .txt 替换为 .png
+        save_path = os.path.splitext(file_path)[0] + '.png'
+        # 读取数据
+        paths = read_timed_paths_from_file(file_path)
+        
+        if not paths:
+            print(f"文件夹 {folder_name} 中没有找到有效的路径数据")
+            continue
+        
+        print(f"成功从文件夹 {folder_name} 读取 {len(paths)} 条路径")
+        for idx, path in enumerate(paths):
+            drive_modes = list(set([p[4] for p in path]))
+            print(f"  路径{idx+1}: {len(path)}个点，模式: {drive_modes}")
+        
+        # 绘制图形
+        plot_timed_paths(paths, save_path)
     
 
     

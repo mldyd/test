@@ -65,7 +65,8 @@ def read_vehicle_data(filepath):
         if line:
             # 解析数据行
             parts = line.split()
-            if len(parts) >= 3:
+            # 只处理恰好有三个数据的行（三元组数据）
+            if len(parts) == 3:
                 x = float(parts[0])
                 y = float(parts[1])
                 time = float(parts[2])
@@ -327,61 +328,122 @@ def create_static_plot(vehicles_data):
 def main():
     """主函数"""
     # 文件路径
-    folder_name = input("请输入文件夹名称: ")
-    # folder_name = 'point copy 5'
+    # script_dir = os.path.dirname(os.path.abspath(__file__))
+    # folder_name = input("请输入文件夹名称: ")
+    # # folder_name = 'point copy 5'
+
+    # filepath = rf'{script_dir}\{folder_name}\output.txt'
+    # output_dir = rf'{script_dir}\{folder_name}'
+    # # 检查文件是否存在
+    # if not os.path.exists(filepath):
+    #     print(f"文件不存在: {filepath}")
+    #     return
+    
+    # # 读取数据
+    # vehicles_data = read_vehicle_data(filepath)
+    
+    # # 修改：添加对空数据的检查，保留对3组数据的警告但允许处理任意数量的数据
+    # if len(vehicles_data) < 1:
+    #     print("错误: 未读取到任何车辆数据")
+    #     return
+    # elif len(vehicles_data) != 3:
+    #     print(f"警告: 期望3组数据，实际读取到{len(vehicles_data)}组")
+    
+    # # 打印数据信息
+    # print("=== 车辆数据信息 ===")
+    # for i, vehicle in enumerate(vehicles_data):
+    #     print(f"车辆{i+1}: {len(vehicle['x'])} 个轨迹点")
+    #     print(f"  时间范围: {min(vehicle['time']):.1f}s - {max(vehicle['time']):.1f}s")
+    #     print(f"  坐标范围: X({min(vehicle['x']):.1f}, {max(vehicle['x']):.1f}) Y({min(vehicle['y']):.1f}, {max(vehicle['y']):.1f})")
+    
+    # # 创建静态可视化
+    # print("\n正在创建静态轨迹图...")
+    
+    # static_fig = create_static_plot(vehicles_data)
+    # static_fig.savefig(os.path.join(output_dir, f'vehicle_trajectories_fixed.png'), 
+    #                   dpi=300, bbox_inches='tight')
+    # print("静态轨迹图已保存: vehicle_trajectories_fixed.png")
+    
+    # # 创建动画
+    # print("\n正在创建车辆运行动画...")
+    # try:
+    #     animation_fig, anim = create_animation(vehicles_data)
+    #     animation_fig.savefig(os.path.join(output_dir, f'vehicle_animation_start_fixed.png'), 
+    #                          dpi=300, bbox_inches='tight')
+        
+    #     # 保存动画为GIF
+    #     anim.save(os.path.join(output_dir, f'vehicle_animation_all_working.gif'), 
+    #              writer='pillow', fps=10)
+    #     print("车辆运行动画已保存: vehicle_animation_all_working.gif")
+        
+    #     # 显示动画
+    #     plt.show()
+        
+    # except Exception as e:
+    #     print(f"动画创建失败: {e}")
+    #     print("请确保已安装pillow库: pip install pillow")
+    
+    # print("\n=== 可视化完成 ===")
+    # 从终端获取输入
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    filepath = rf'{script_dir}\{folder_name}\output.txt'
-    output_dir = rf'{script_dir}\{folder_name}'
-    # 检查文件是否存在
-    if not os.path.exists(filepath):
-        print(f"文件不存在: {filepath}")
-        return
-    
-    # 读取数据
-    vehicles_data = read_vehicle_data(filepath)
-    
-    # 修改：添加对空数据的检查，保留对3组数据的警告但允许处理任意数量的数据
-    if len(vehicles_data) < 1:
-        print("错误: 未读取到任何车辆数据")
-        return
-    elif len(vehicles_data) != 3:
-        print(f"警告: 期望3组数据，实际读取到{len(vehicles_data)}组")
-    
-    # 打印数据信息
-    print("=== 车辆数据信息 ===")
-    for i, vehicle in enumerate(vehicles_data):
-        print(f"车辆{i+1}: {len(vehicle['x'])} 个轨迹点")
-        print(f"  时间范围: {min(vehicle['time']):.1f}s - {max(vehicle['time']):.1f}s")
-        print(f"  坐标范围: X({min(vehicle['x']):.1f}, {max(vehicle['x']):.1f}) Y({min(vehicle['y']):.1f}, {max(vehicle['y']):.1f})")
-    
-    # 创建静态可视化
-    print("\n正在创建静态轨迹图...")
-    
-    static_fig = create_static_plot(vehicles_data)
-    static_fig.savefig(os.path.join(output_dir, f'vehicle_trajectories_fixed.png'), 
-                      dpi=300, bbox_inches='tight')
-    print("静态轨迹图已保存: vehicle_trajectories_fixed.png")
-    
-    # 创建动画
-    print("\n正在创建车辆运行动画...")
-    try:
-        animation_fig, anim = create_animation(vehicles_data)
-        animation_fig.savefig(os.path.join(output_dir, f'vehicle_animation_start_fixed.png'), 
-                             dpi=300, bbox_inches='tight')
+
+    for i in range(10):
+        folder_name = f'point copy {i}'
+        filepath = rf'{script_dir}\{folder_name}\output.txt'
+        output_dir = rf'{script_dir}\{folder_name}'
         
-        # 保存动画为GIF
-        anim.save(os.path.join(output_dir, f'vehicle_animation_all_working.gif'), 
-                 writer='pillow', fps=10)
-        print("车辆运行动画已保存: vehicle_animation_all_working.gif")
+        print(f"\n正在处理文件夹: {folder_name}")
+        # 检查文件是否存在
+        if not os.path.exists(filepath):
+            print(f"文件不存在: {filepath}")
+            continue
         
-        # 显示动画
-        plt.show()
+        # 读取数据
+        vehicles_data = read_vehicle_data(filepath)
         
-    except Exception as e:
-        print(f"动画创建失败: {e}")
-        print("请确保已安装pillow库: pip install pillow")
-    
-    print("\n=== 可视化完成 ===")
+        # 修改：添加对空数据的检查，保留对3组数据的警告但允许处理任意数量的数据
+        if len(vehicles_data) < 1:
+            print("错误: 未读取到任何车辆数据")
+            continue
+        elif len(vehicles_data) != 3:
+            print(f"警告: 期望3组数据，实际读取到{len(vehicles_data)}组")
+        
+        # 打印数据信息
+        print("=== 车辆数据信息 ===")
+        for idx, vehicle in enumerate(vehicles_data):
+            print(f"车辆{idx+1}: {len(vehicle['x'])} 个轨迹点")
+            print(f"  时间范围: {min(vehicle['time']):.1f}s - {max(vehicle['time']):.1f}s")
+            print(f"  坐标范围: X({min(vehicle['x']):.1f}, {max(vehicle['x']):.1f}) Y({min(vehicle['y']):.1f}, {max(vehicle['y']):.1f})")
+        
+        # 创建静态可视化
+        print("\n正在创建静态轨迹图...")
+        
+        static_fig = create_static_plot(vehicles_data)
+        static_fig.savefig(os.path.join(output_dir, f'vehicle_trajectories_fixed.png'), 
+                          dpi=300, bbox_inches='tight')
+        print("静态轨迹图已保存: vehicle_trajectories_fixed.png")
+        
+        # 创建动画
+        print("\n正在创建车辆运行动画...")
+        try:
+            animation_fig, anim = create_animation(vehicles_data)
+            animation_fig.savefig(os.path.join(output_dir, f'vehicle_animation_start_fixed.png'), 
+                                 dpi=300, bbox_inches='tight')
+            
+            # 保存动画为GIF
+            anim.save(os.path.join(output_dir, f'vehicle_animation_all_working.gif'), 
+                     writer='pillow', fps=10)
+            print("车辆运行动画已保存: vehicle_animation_all_working.gif")
+            
+            # 关闭当前图形，避免内存泄漏
+            plt.close(animation_fig)
+            plt.close(static_fig)
+            
+        except Exception as e:
+            print(f"动画创建失败: {e}")
+            print("请确保已安装pillow库: pip install pillow")
+        
+        print("\n=== 当前文件夹处理完成 ===")
 
 if __name__ == "__main__":
     main()
